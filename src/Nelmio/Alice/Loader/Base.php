@@ -253,6 +253,11 @@ class Base implements LoaderInterface
                     return $reference->$getter();
                 }
 
+                $getter = 'getField';
+                if (method_exists($reference, $getter) && is_callable(array($reference, $getter))) {
+                    return $reference->$getter($property);
+                }
+
                 throw new \UnexpectedValueException('Property '.$property.' is not defined for reference '.$name);
             }
 
