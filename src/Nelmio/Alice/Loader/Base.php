@@ -492,14 +492,14 @@ class Base implements LoaderInterface
                     $rel = $this->checkTypeHints($instance, $method, $rel);
                     $instance->{$method}($rel);
                 }
-            } elseif (isset($customSetter)) {
-                $instance->$customSetter($key, $generatedVal);
-                $variables[$key] = $generatedVal;
             } elseif (is_array($generatedVal) && method_exists($instance, $key)) {
                 foreach ($generatedVal as $num => $param) {
                     $generatedVal[$num] = $this->checkTypeHints($instance, $key, $param, $num);
                 }
                 call_user_func_array(array($instance, $key), $generatedVal);
+                $variables[$key] = $generatedVal;
+            } elseif (isset($customSetter)) {
+                $instance->$customSetter($key, $generatedVal);
                 $variables[$key] = $generatedVal;
             } elseif (method_exists($instance, 'set'.$key)) {
                 $generatedVal = $this->checkTypeHints($instance, 'set'.$key, $generatedVal);
